@@ -1,1 +1,80 @@
+###
+# ECLIPSE IDE project files
+##
+.project
+.cache
+.cache/*
+.settings
+.settings/*
+
+###
+# SUBLIME
+##
+platform.sublime-project
+platform.sublime-workspace
 sftp-config.json
+
+##
+# Sublime Project Files
+##
+platform.sublime-project
+platform.sublime-workspace
+
+###
+# Sublime
+###
+.sublime_project
+.sublime_workspace
+
+###
+# Sublime	
+##
+platform.sublime-project
+platform.sublime-workspace
+
+###
+# Dreamweaver
+###
+
+_notes
+
+###
+# system SWAP, TMP and BACKUP files
+###
+*~
+*.swp
+*.bak
+
+###
+# Mac OS X directory preferences
+###
+.DS_Store
+._*
+
+###
+# Fusebox
+###
+parsed/
+
+###
+# System
+/pos/assets/js/minify/*
+/siteadmin/temp/*
+###
+
+settings.ini
+
+###
+# SASS
+##
+
+.sass-cache
+
+###
+.nodemonignore
+.bower-*/
+.idea/
+node_modules/
+public/lib
+test/coverage
+mean.iml

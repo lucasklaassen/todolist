@@ -42,6 +42,7 @@ app.post('/addtodo', todo.addtodo(db));
 
 //PUT METHODS
 app.put('/toggletodo/:id', todo.toggletodo(db));
+app.put('/updatetodo/:id', todo.updatetodo(db));
 
 // DELETE METHODS
 app.delete('/deletetodo/:id', todo.deletetodo(db));

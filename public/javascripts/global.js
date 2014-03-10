@@ -39,8 +39,12 @@ var toDoController = {
 			$('.completedToDos').html(completedToDos);
 
 			//init event functions
+			
+			//Delete Todo
 			$('a.delete').on('click', toDoController.deleteToDoItem);
+			//Toggle Todo
 			$(".checkbox input[type=checkbox]").on("change", toDoController.toggleToDoItem);
+			//Update Todo
 			$("label.toDoInput").on("click", function() {
 					var prevContent = $(this).html();
 					$(this).replaceWith("<input type=\"text\" value=\"" + prevContent + "\" class=\"editToDoInput\"  />");
@@ -48,7 +52,6 @@ var toDoController = {
 					$('.editToDoInput').on("keyup", function(e){
 						if(e.keyCode == 13){
 							var updateData = {
-								//INPUT VALUE GOES HERE =================
 								'input': $(this).val()
 							}
 							var ID = $(this).prev().attr('id');
@@ -56,34 +59,19 @@ var toDoController = {
 						}
 					});
 			});	
-
 		});
 
 	},
 
-	createToDoItem : function(event) {
-			event.preventDefault();
-
-			// Super basic validation - increase errorCount variable if any fields are blank
-			var errorCount = 0;
-
-			if($('.inputToDo').val() === ''){
-				errorCount++;
-			};
+	createToDoItem : function(errorCount,input) {	
 
 			// Check and make sure errorCount's still at zero
 			if(errorCount === 0) {
 
-			  // If it is, compile all user info into one object
-			  var newToDo = {
-			    'input': $('.inputToDo').val(),
-			    'isComplete': "false"
-			  }
-
 			  // Use AJAX to post the object to our adduser service
 			  $.ajax({
 			    type: 'POST',
-			    data: newToDo,
+			    data: input,
 			    url: '/addtodo',
 			    dataType: 'JSON'
 			  }).done(function( response ) {
@@ -291,5 +279,20 @@ $(document).ready(function(){
 	// toDoController.init.updateToDoItemDisplay();
 	// toDoController.init.deleteToDoItemDisplay();
 	toDoController.refreshView();
-	$('#btnAddToDo').on('click', toDoController.createToDoItem);
+	$('.inputToDo').on("keyup", function(e){
+		if(e.keyCode == 13){
+
+			var errorCount = 0;
+
+			if($('.inputToDo').val() === ''){
+				errorCount++;
+			};
+
+			var inputData = {
+				'input': $(this).val(),
+				'isComplete': "false"
+			}
+			toDoController.createToDoItem(errorCount,inputData);
+		}
+	});
 });

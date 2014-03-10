@@ -41,6 +41,21 @@ var toDoController = {
 			//init event functions
 			$('a.delete').on('click', toDoController.deleteToDoItem);
 			$(".checkbox input[type=checkbox]").on("change", toDoController.toggleToDoItem);
+			$("label.toDoInput").on("click", function() {
+					var prevContent = $(this).html();
+					$(this).replaceWith("<input type=\"text\" value=\"" + prevContent + "\" class=\"editToDoInput\"  />");
+					$('.editToDoInput').focus();
+					$('.editToDoInput').on("keyup", function(e){
+						if(e.keyCode == 13){
+							var updateData = {
+								//INPUT VALUE GOES HERE =================
+								'input': $(this).val()
+							}
+							var ID = $(this).prev().attr('id');
+							toDoController.updateToDoItem(updateData,ID);
+						}
+					});
+			});	
 
 		});
 
@@ -116,6 +131,32 @@ var toDoController = {
 			    type: 'PUT',
 			    data: toggleData,
 			    url: '/toggletodo/' + $(this).attr('id'),
+			    dataType: 'JSON'
+			  }).done(function( response ) {
+
+			    // Check for successful (blank) response
+			    if (response.msg === '') {
+
+			      // Update the table
+			      toDoController.refreshView();
+
+			    }
+			    else {
+
+			      // If something goes wrong, alert the error message that our service returned
+			      alert('Error: ' + response.msg);
+
+			    }
+			  });
+	},
+
+	updateToDoItem : function(data, id){
+
+			  // Use AJAX to post the object to our adduser service
+			  $.ajax({
+			    type: 'PUT',
+			    data: data,
+			    url: '/updatetodo/' + id,
 			    dataType: 'JSON'
 			  }).done(function( response ) {
 

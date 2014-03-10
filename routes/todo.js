@@ -1,7 +1,7 @@
 var ObjectID = require('mongodb').ObjectID
 
 /*
- * GET userlist page.
+ * GET todolist
  */
 
 exports.todolist = function(db) {
@@ -23,6 +23,16 @@ exports.addtodo = function(db) {
 };
 
 exports.toggletodo = function(db) {
+  return function(req, res) {
+    db.collection('todolist').update({"_id": new ObjectID(req.params.id)},{ $set: req.body }, function(err, result){
+      res.send(
+        (err === null) ? { msg: '' } : { msg: err }
+      );
+    }); 
+  }
+};
+
+exports.updatetodo = function(db) {
   return function(req, res) {
     db.collection('todolist').update({"_id": new ObjectID(req.params.id)},{ $set: req.body }, function(err, result){
       res.send(

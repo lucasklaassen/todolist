@@ -1,4 +1,5 @@
 var ObjectID = require('mongodb').ObjectID
+var validator = require('validator');
 
 /*
  * GET todolist
@@ -14,6 +15,8 @@ exports.todolist = function(db) {
 
 exports.addtodo = function(db) {
   return function(req, res) {
+    req.body.isComplete = "false";
+    req.body.input = validator.escape(req.body.input);
     db.collection('todolist').insert(req.body, function(err, result){
       res.send(
         (err === null) ? { msg: '' } : { msg: err }
@@ -34,6 +37,7 @@ exports.toggletodo = function(db) {
 
 exports.updatetodo = function(db) {
   return function(req, res) {
+    req.body.input = validator.escape(req.body.input);
     db.collection('todolist').update({"_id": new ObjectID(req.params.id)},{ $set: req.body }, function(err, result){
       res.send(
         (err === null) ? { msg: '' } : { msg: err }

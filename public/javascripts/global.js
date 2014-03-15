@@ -38,11 +38,15 @@ var toDoController = {
 					$('.editToDoInput').focus();
 					$('.editToDoInput').on("keyup", function(e){
 						if(e.keyCode == 13){
+							var errorCount = 0;
+							if($(this).val() === ''){
+								errorCount++;
+							};
 							var updateData = {
 								'input': $(this).val()
 							}
 							var ID = $(this).prev().attr('id');
-							toDoController.updateToDoItem(updateData,ID);
+							toDoController.updateToDoItem(errorCount,updateData,ID);
 						}
 					});
 			});	
@@ -50,7 +54,7 @@ var toDoController = {
 
 	},
 
-	createToDoItem : function(errorCount,input) {	
+	createToDoItem : function(errorCount,input) {
 			// Check and make sure errorCount's still at zero
 			if(errorCount === 0) {
 			  // Use AJAX to post the object to our adduser service
@@ -75,6 +79,7 @@ var toDoController = {
 			}
 			else {
 			  // If errorCount is more than 0, error out
+			  $('.inputToDo').blur();
 			  alert('Please fill in all fields');
 			  return false;
 			}
@@ -111,24 +116,32 @@ var toDoController = {
 			  });
 	},
 
-	updateToDoItem : function(data, id){
-			  // Use AJAX to post the object to our adduser service
-			  $.ajax({
-			    type: 'PUT',
-			    data: data,
-			    url: '/updatetodo/' + id,
-			    dataType: 'JSON'
-			  }).done(function( response ) {
-			    // Check for successful (blank) response
-			    if (response.msg === '') {
-			      // Update the table
-			      toDoController.refreshView();
-			    }
-			    else {
-			      // If something goes wrong, alert the error message that our service returned
-			      alert('Error: ' + response.msg);
-			    }
-			  });
+	updateToDoItem : function(errorCount, data, id){
+			// Check and make sure errorCount's still at zero
+		  if(errorCount === 0){
+		  	// Use AJAX to post the object to our adduser service
+		  	$.ajax({
+		  	  type: 'PUT',
+		  	  data: data,
+		  	  url: '/updatetodo/' + id,
+		  	  dataType: 'JSON'
+		  	}).done(function( response ) {
+		  	  // Check for successful (blank) response
+		  	  if (response.msg === '') {
+		  	    // Update the table
+		  	    toDoController.refreshView();
+		  	  }
+		  	  else {
+		  	    // If something goes wrong, alert the error message that our service returned
+		  	    alert('Error: ' + response.msg);
+		  	  }
+		  	});
+		  } else {
+			  // If errorCount is more than 0, error out
+			  $('.editToDoInput').blur();
+			  alert('Please fill in all fields');
+			  return false;
+			}
 	},
 
 	deleteToDoItem : function(event){
@@ -169,8 +182,7 @@ $(document).ready(function(){
 				errorCount++;
 			};
 			var inputData = {
-				'input': $(this).val(),
-				'isComplete': "false"
+				'input': $(this).val()
 			}
 			toDoController.createToDoItem(errorCount,inputData);
 		}
